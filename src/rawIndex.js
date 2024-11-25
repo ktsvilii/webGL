@@ -14,8 +14,8 @@ function updateSize() {
   const viewportHeight = window.innerHeight;
   const viewportWidth = window.innerWidth;
 
-  rootElement.style.width = ${viewportWidth}px;
-  rootElement.style.height = ${viewportHeight}px;
+  rootElement.style.width = `${viewportWidth}px`;
+  rootElement.style.height = `${viewportHeight}px`;
 }
 
 // Вызываем функцию при загрузке страницы
@@ -117,11 +117,10 @@ function createButton(reducedDistance, label, position, target) {
   buttonContainer.appendChild(button);
 }
 
-
 // Predefined camera views
 createButton(2, 'Front View', [9, 4, -15], [0, 0, 0]);
-createButton(3,'Top View', [8, -15, -14], [0, 0, 0]);
-createButton(2.5,'Side View', [5, -1, 3], [0, 0, 0]);
+createButton(3, 'Top View', [8, -15, -14], [0, 0, 0]);
+createButton(2.5, 'Side View', [5, -1, 3], [0, 0, 0]);
 
 // Load external file into Viewer
 viewer.addSplatScene('https://huggingface.co/spaces/Vision70s/GaussianVision70s/resolve/main/archViz_orig.ply', {
@@ -141,6 +140,5 @@ function animate() {
   viewer.update();
   viewer.render();
 }
-
 
 animate();
