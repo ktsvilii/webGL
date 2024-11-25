@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import * as GaussianSplats3D from './gaussian-splats-3d.module.js'; // Импорт библиотеки
+import * as GaussianSplats3D from '../gaussian-splats-3d.module.js'; // Импорт библиотеки
 
-export function initViewer(renderer3D, threeScene, renderHeight, renderWidth, initial = true) {
+export function initViewer(link, renderer3D, threeScene, renderHeight, renderWidth, initial = true) {
   // Инициализация Viewer
   let viewer;
   let camera;
@@ -20,7 +20,7 @@ export function initViewer(renderer3D, threeScene, renderHeight, renderWidth, in
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // Загрузка внешнего файла в Viewer
-    viewer.addSplatScene('https://huggingface.co/spaces/Vision70s/GaussianVision70s/resolve/main/archViz_orig.ply', {
+    viewer.addSplatScene(link, {
       progressiveLoad: true,
       showLoadingUI: false,
       onLoad: threeScene => {

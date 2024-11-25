@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-import { initRenderer } from './renderer.js';
-import { initScene } from './scene.js';
-import { initViewer } from './viewer.js';
-import { animateCameraTo, initControls } from './controls.js';
-
+import { initRenderer } from '../utils/renderer.js';
+import { initScene } from '../utils/scene.js';
+import { initViewer } from '../utils/viewer.js';
+import { animateCameraTo, initControls } from '../utils/controls.js';
 
 const renderWidth = 1525;
 const renderHeight = 700;
@@ -13,7 +12,13 @@ const { renderer3D, rootElement } = initRenderer();
 // Create main scene for 3D objects
 const { threeScene } = initScene();
 
-const { viewer, camera } = initViewer(renderer3D, threeScene, renderHeight, renderWidth);
+const { viewer, camera } = initViewer(
+  'https://huggingface.co/spaces/Vision70s/GaussianVision70s/resolve/main/13millOrigCompressed.ply',
+  renderer3D,
+  threeScene,
+  renderHeight,
+  renderWidth,
+);
 
 const { controls } = initControls(camera, renderer3D);
 
@@ -35,7 +40,6 @@ function createButton(reducedDistance, label, position, target) {
     const direction = positionVector.clone().sub(targetVector).normalize();
 
     const closerPosition = targetVector.clone().add(direction.multiplyScalar(reducedDistance));
-    console.log(closerPosition)
     animateCameraTo(camera, controls, [closerPosition.x, closerPosition.y, closerPosition.z], target);
   };
 
@@ -44,7 +48,7 @@ function createButton(reducedDistance, label, position, target) {
 
 const boundingBox = new THREE.Box3(
   new THREE.Vector3(-10, -10, -10), // Minimum x, y, z
-  new THREE.Vector3(10, 10, 10)    // Maximum x, y, z
+  new THREE.Vector3(10, 10, 10), // Maximum x, y, z
 );
 
 controls.addEventListener('change', () => {
@@ -57,9 +61,8 @@ controls.addEventListener('change', () => {
 
 // Predefined camera views
 createButton(2, 'Front View', [9, 4, -15], [0, 0, 0]);
-createButton(3,'Top View', [8, -15, -14], [0, 0, 0]);
-createButton(2.5,'Side View', [5, -1, 3.5], [0, 0, 0]);
-
+createButton(3, 'Top View', [8, -15, -14], [0, 0, 0]);
+createButton(2.5, 'Side View', [5, -1, 3.5], [0, 0, 0]);
 
 const rotationSpeed = 0.0001;
 
@@ -76,4 +79,3 @@ function animate() {
 }
 
 animate();
-
