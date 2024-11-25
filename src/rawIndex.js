@@ -124,7 +124,7 @@ createButton(3,'Top View', [8, -15, -14], [0, 0, 0]);
 createButton(2.5,'Side View', [5, -1, 3], [0, 0, 0]);
 
 // Load external file into Viewer
-viewer.addSplatScene('https://huggingface.co/spaces/Vision70s/GaussianVision70s/resolve/main/archViz_orig.ply', {
+viewer.addSplatScene('https://drive.google.com/file/d/1Tgwe-dF4pp-yF6yyqz86KG7FoogT6Uh0/view?usp=sharing', {
   progressiveLoad: true,
 });
 
