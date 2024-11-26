@@ -3,15 +3,23 @@ import { initRenderer } from '../utils/renderer.js';
 import { initScene } from '../utils/scene.js';
 import { initViewer } from '../utils/viewer.js';
 import { animateCameraTo, initControls } from '../utils/controls.js';
+import { setupResizeObserver, setupWindowResizeHandlers } from '../utils/resizing.js';
 
-const renderWidth = 1525;
-const renderHeight = 700;
+// Constants for initial dimensions
+let renderWidth = window.innerWidth;
+let renderHeight = window.innerHeight;
 
-const { renderer3D, rootElement } = initRenderer();
+// Initialize Renderer
+const { renderer3D } = initRenderer(renderWidth, renderHeight);
+const canvas = renderer3D.domElement;
 
-// Create main scene for 3D objects
+// Setup Resize Observer for Dynamic Canvas Resizing
+setupResizeObserver(canvas, renderer3D);
+
+// Initialize Main Scene
 const { threeScene } = initScene();
 
+// Initialize Viewer and Controls
 const { viewer, camera } = initViewer(
   'https://huggingface.co/spaces/Vision70s/GaussianVision70s/resolve/main/13millOrigCompressed.ply',
   renderer3D,
@@ -19,16 +27,9 @@ const { viewer, camera } = initViewer(
   renderHeight,
   renderWidth,
 );
-
 const { controls } = initControls(camera, renderer3D);
 
-// Button container
-const buttonContainer = document.createElement('div');
-buttonContainer.style.position = 'absolute';
-buttonContainer.style.top = '10px';
-buttonContainer.style.left = '10px';
-document.body.appendChild(buttonContainer);
-
+// Button Creation Function
 function createButton(reducedDistance, label, position, target) {
   const button = document.createElement('button');
   button.innerText = label;
@@ -46,10 +47,15 @@ function createButton(reducedDistance, label, position, target) {
   buttonContainer.appendChild(button);
 }
 
-const boundingBox = new THREE.Box3(
-  new THREE.Vector3(-10, -10, -10), // Minimum x, y, z
-  new THREE.Vector3(10, 10, 10), // Maximum x, y, z
-);
+// Create Button Container
+const buttonContainer = document.createElement('div');
+buttonContainer.style.position = 'absolute';
+buttonContainer.style.top = '10px';
+buttonContainer.style.left = '10px';
+document.body.appendChild(buttonContainer);
+
+// Bounding Box for Camera Limits
+const boundingBox = new THREE.Box3(new THREE.Vector3(-10, -10, -10), new THREE.Vector3(10, 10, 10));
 
 controls.addEventListener('change', () => {
   const pos = camera.position;
@@ -59,19 +65,20 @@ controls.addEventListener('change', () => {
   pos.z = THREE.MathUtils.clamp(pos.z, boundingBox.min.z, boundingBox.max.z);
 });
 
-// Predefined camera views
+// Create Predefined Camera Views
 createButton(2, 'Front View', [9, 4, -15], [0, 0, 0]);
 createButton(3, 'Top View', [8, -15, -14], [0, 0, 0]);
 createButton(2.5, 'Side View', [5, -1, 3.5], [0, 0, 0]);
 
-const rotationSpeed = 0.0001;
+// Setup Window Resize Handlers
+setupWindowResizeHandlers(renderer3D, camera);
 
+// Animation Loop
 function animate() {
   requestAnimationFrame(() => setTimeout(animate, 1000 / 30)); // Limit FPS to 30
 
-  // Use controls for smooth rotation
-  controls.autoRotate = true; // Enable automatic rotation
-  controls.autoRotateSpeed = 1.0; // Adjust speed as needed
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.0;
   controls.update();
 
   viewer.update();

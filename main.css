@@ -7,6 +7,12 @@ body {
   gap: 10px;
   padding: 10px;
 }
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+}
+
 .box {
   border: 1px solid #000;
   padding: 10px;
