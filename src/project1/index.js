@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { initRenderer } from '../utils/renderer.js';
 import { initScene } from '../utils/scene.js';
 import { initViewer } from '../utils/viewer.js';
-import { animateCameraTo, initControls } from '../utils/controls.js';
+import { animateCameraTo, attachButtonTo3DPoint, initControls } from '../utils/controls.js';
 import { setupResizeObserver, setupWindowResizeHandlers } from '../utils/resizing.js';
 
 // Constants for initial dimensions
@@ -17,7 +17,7 @@ const canvas = renderer3D.domElement;
 setupResizeObserver(canvas, renderer3D);
 
 // Initialize Main Scene
-const { threeScene } = initScene();
+let { threeScene } = initScene();
 
 // Initialize Viewer and Controls
 const { viewer, camera } = initViewer(
@@ -64,6 +64,10 @@ controls.addEventListener('change', () => {
   pos.y = THREE.MathUtils.clamp(pos.y, boundingBox.min.y, boundingBox.max.y);
   pos.z = THREE.MathUtils.clamp(pos.z, boundingBox.min.z, boundingBox.max.z);
 });
+
+// Example: Attach a button to a specific 3D point
+const targetPoint = new THREE.Vector3(0, 1, 0);
+attachButtonTo3DPoint(targetPoint, 'Zoom here', camera, controls);
 
 // Create Predefined Camera Views
 createButton(2, 'Front View', [9, 4, -15], [0, 0, 0]);

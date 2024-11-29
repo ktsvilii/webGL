@@ -33,13 +33,13 @@ export function initControls(camera, renderer) {
 let isAnimating = false;
 
 // Возвращает камеру к основному объекту
-function returnCameraToMainObject(camera, controls, mainObjectPosition, maxDistance, duration = 1) {
+export function returnCameraToMainObject(camera, controls, mainObjectPosition, maxDistance, duration = 1) {
   if (isAnimating) return; // Если уже идёт анимация, пропускаем
 
   const startPosition = camera.position.clone();
-  const targetPosition = mainObjectPosition.clone().add(
-    camera.position.clone().sub(mainObjectPosition).normalize().multiplyScalar(maxDistance)
-  );
+  const targetPosition = mainObjectPosition
+    .clone()
+    .add(camera.position.clone().sub(mainObjectPosition).normalize().multiplyScalar(maxDistance));
 
   isAnimating = true; // Устанавливаем флаг анимации
   let animationProgress = 0;
@@ -96,4 +96,50 @@ export function animateCameraTo(camera, controls, position, target, duration = 1
   };
 
   animate();
+}
+
+// Function to attach a button to a 3D point
+export function attachButtonTo3DPoint(point3D, label, camera, controls) {
+  // Create the button element
+  const button = document.createElement('button');
+  button.innerText = label;
+  button.classList.add('custom-button');
+  button.style.position = 'absolute';
+  button.style.zIndex = '10'; // Ensure it appears above the canvas
+  document.body.appendChild(button);
+
+  // Update button position based on the 3D point
+  function updateButtonPosition() {
+    // Project 3D point to 2D screen space
+    const vector = point3D.clone().project(camera);
+
+    // Map normalized device coordinates (NDC) to screen coordinates
+    const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+    const y = (-vector.y * 0.5 + 0.5) * window.innerHeight;
+
+    // Position the button
+    button.style.left = `${x}px`;
+    button.style.top = `${y}px`;
+  }
+
+  // Update the button position on every animation frame
+  function animateButton() {
+    updateButtonPosition();
+    requestAnimationFrame(animateButton);
+  }
+
+  animateButton();
+
+  button.onclick = () => {
+    // Zoom the camera closer to the point where the button is attached
+    const targetVector = new THREE.Vector3(0, 0, 0);
+    const positionVector = new THREE.Vector3(2, 4, 6);
+    const direction = positionVector.clone().sub(targetVector).normalize();
+
+    const reducedDistance = 2;
+    const closerPosition = targetVector.clone().add(direction.multiplyScalar(reducedDistance));
+    animateCameraTo(camera, controls, [closerPosition.x, closerPosition.y, closerPosition.z], targetVector.toArray());
+  };
+
+  return button;
 }

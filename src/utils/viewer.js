@@ -11,7 +11,7 @@ export function initViewer(link, renderer3D, threeScene, renderHeight, renderWid
       threeScene: threeScene,
       renderer: renderer3D,
       camera: new THREE.PerspectiveCamera(50, renderWidth / renderHeight, 0.01, 500),
-      useBuiltInControls: true,
+      useBuiltInControls: false,
     });
 
     camera = viewer.camera;
