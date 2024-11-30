@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../node_modules/three';
 import { initRenderer } from '../utils/renderer.js';
 import { initScene } from '../utils/scene.js';
 import { initViewer } from '../utils/viewer.js';
