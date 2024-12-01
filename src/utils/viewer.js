@@ -12,6 +12,7 @@ export function initViewer(link, renderer3D, threeScene, renderHeight, renderWid
       renderer: renderer3D,
       camera: new THREE.PerspectiveCamera(50, renderWidth / renderHeight, 0.01, 500),
       useBuiltInControls: false,
+      'sharedMemoryForWorkers': false
     });
 
     camera = viewer.camera;
@@ -45,6 +46,7 @@ export function initViewer(link, renderer3D, threeScene, renderHeight, renderWid
       renderer: renderer3D,
       camera: new THREE.PerspectiveCamera(50, renderWidth / renderHeight, 0.01, 500),
       useBuiltInControls: true,
+      'sharedMemoryForWorkers': false
     });
 
     camera = viewer.camera;

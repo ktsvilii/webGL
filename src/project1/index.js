@@ -2,7 +2,7 @@ import * as THREE from '../../node_modules/three';
 import { initRenderer } from '../utils/renderer.js';
 import { initScene } from '../utils/scene.js';
 import { initViewer } from '../utils/viewer.js';
-import { animateCameraTo, attachButtonTo3DPoint, initControls } from '../utils/controls.js';
+import { animateCameraTo, initControls } from '../utils/controls.js';
 import { setupResizeObserver, setupWindowResizeHandlers } from '../utils/resizing.js';
 
 // Constants for initial dimensions
