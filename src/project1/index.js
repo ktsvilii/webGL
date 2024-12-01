@@ -67,7 +67,7 @@ controls.addEventListener('change', () => {
 
 // Example: Attach a button to a specific 3D point
 const targetPoint = new THREE.Vector3(0, 1, 0);
-attachButtonTo3DPoint(targetPoint, 'Zoom here', camera, controls);
+// attachButtonTo3DPoint(targetPoint, 'Zoom here', camera, controls);
 
 // Create Predefined Camera Views
 createButton(2, 'Front View', [9, 4, -15], [0, 0, 0]);
@@ -81,7 +81,7 @@ setupWindowResizeHandlers(renderer3D, camera);
 function animate() {
   requestAnimationFrame(() => setTimeout(animate, 1000 / 30)); // Limit FPS to 30
 
-  controls.autoRotate = true;
+  controls.autoRotate = false;
   controls.autoRotateSpeed = 1.0;
   controls.update();
 

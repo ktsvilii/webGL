@@ -4,8 +4,8 @@ import * as THREE from 'three';
 export function initControls(camera, renderer) {
   // Настройка OrbitControls
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = false;
-  controls.screenSpacePanning = false;
+  controls.enableDamping = true;
+  controls.screenSpacePanning = true;
 
   // Ограничение вращения камеры
   controls.maxPolarAngle = Math.PI / 2 - 0.1; // Почти горизонтально

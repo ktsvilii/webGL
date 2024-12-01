@@ -10,6 +10,7 @@ export default defineConfig({
         main: './index.html',
         project1: './src/project1/index.html',
         project2: './src/project2/index.html',
+        project3: './src/project3/index.html',
       },
       external: [],
     },
