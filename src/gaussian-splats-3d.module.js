@@ -5707,13 +5707,9 @@ class LoadingSpinner {
 }
 
 class LoadingProgressBar {
-
     constructor(container) {
-
         this.idGen = 0;
-
         this.tasks = [];
-
         this.container = container || document.body;
 
         this.progressBarContainerOuter = document.createElement('div');
@@ -5729,13 +5725,23 @@ class LoadingProgressBar {
         this.progressBar = document.createElement('div');
         this.progressBar.className = 'progressBar';
 
+        this.progressPercentage = document.createElement('span'); // Add a percentage label
+        this.progressPercentage.className = 'progressPercentage';
+        this.progressPercentage.style.position = 'absolute';
+        this.progressPercentage.style.top = '50%';
+        this.progressPercentage.style.left = '50%';
+        this.progressPercentage.style.transform = 'translate(-50%, -50%)';
+        this.progressPercentage.style.color = '#fff';
+        this.progressPercentage.style.fontWeight = 'bold';
+        this.progressPercentage.style.fontSize = '14px';
+
         this.progressBarBackground.appendChild(this.progressBar);
+        this.progressBarBackground.appendChild(this.progressPercentage); // Append percentage label
         this.progressBarBox.appendChild(this.progressBarBackground);
         this.progressBarContainerOuter.appendChild(this.progressBarBox);
 
         const style = document.createElement('style');
         style.innerHTML = `
-
             .progressBarOuterContainer {
                 width: 100%;
                 height: 100%;
@@ -5747,7 +5753,7 @@ class LoadingProgressBar {
             }
 
             .progressBarBox {
-                z-index:99999;
+                z-index: 99999;
                 padding: 7px 9px 5px 7px;
                 background-color: rgba(190, 190, 190, 0.75);
                 border: #555555 1px solid;
@@ -5765,20 +5771,24 @@ class LoadingProgressBar {
             .progressBarBackground {
                 width: 100%;
                 height: 25px;
-                border-radius:10px;
+                border-radius: 10px;
                 background-color: rgba(128, 128, 128, 0.75);
                 border: #444444 1px solid;
                 box-shadow: inset 0 0 10px #333333;
+                position: relative;
             }
 
             .progressBar {
                 height: 25px;
                 width: 0px;
-                border-radius:10px;
+                border-radius: 10px;
                 background-color: rgba(0, 200, 0, 0.75);
                 box-shadow: inset 0 0 10px #003300;
             }
 
+            .progressPercentage {
+                pointer-events: none;
+            }
         `;
         this.progressBarContainerOuter.appendChild(style);
         this.container.appendChild(this.progressBarContainerOuter);
@@ -5794,6 +5804,7 @@ class LoadingProgressBar {
 
     setProgress(progress) {
         this.progressBar.style.width = progress + '%';
+        this.progressPercentage.textContent = `${Math.round(progress)}%`; // Update percentage label
     }
 
     setContainer(container) {
@@ -5806,7 +5817,6 @@ class LoadingProgressBar {
             this.progressBarContainerOuter.style.zIndex = this.container.style.zIndex + 1;
         }
     }
-
 }
 
 class InfoPanel {
@@ -12249,7 +12259,7 @@ class Viewer {
         let loadingUITaskId = null;
         if (showLoadingUI) {
             this.loadingSpinner.removeAllTasks();
-            loadingUITaskId = this.loadingSpinner.addTask('Downloading...');
+            loadingUITaskId = this.loadingSpinner.addTask('InterPres');
         }
         const hideLoadingUI = () => {
             this.loadingProgressBar.hide();
@@ -12259,18 +12269,21 @@ class Viewer {
         const onProgressUIUpdate = (percentComplete, percentCompleteLabel, loaderStatus) => {
             if (showLoadingUI) {
                 if (loaderStatus === LoaderStatus.Downloading) {
-                    if (percentComplete == 100) {
+                    if (percentComplete === 100) {
                         this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Download complete!');
+                        this.loadingProgressBar.setProgress(100); // Show 100% on completion
                     } else {
                         if (progressiveLoad) {
-                            this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Downloading splats...');
+                            this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Downloading sceen');
                         } else {
                             const suffix = percentCompleteLabel ? `: ${percentCompleteLabel}` : `...`;
                             this.loadingSpinner.setMessageForTask(loadingUITaskId, `Downloading${suffix}`);
                         }
+                        this.loadingProgressBar.setProgress(percentComplete); // Update progress bar
                     }
                 } else if (loaderStatus === LoaderStatus.Processing) {
-                    this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Processing splats...');
+                    this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Processing sceen...');
+                    this.loadingProgressBar.setProgress(percentComplete); // Update during processing
                 }
             }
         };
@@ -12279,16 +12292,16 @@ class Viewer {
         let downloadedPercentage = 0;
         const splatBuffersAddedUIUpdate = (firstBuild, finalBuild) => {
             if (showLoadingUI) {
-                if (firstBuild && progressiveLoad || finalBuild && !progressiveLoad) {
+                if ((firstBuild && progressiveLoad) || (finalBuild && !progressiveLoad)) {
                     this.loadingSpinner.removeTask(loadingUITaskId);
                     if (!finalBuild && !downloadDone) this.loadingProgressBar.show();
                 }
                 if (progressiveLoad) {
                     if (finalBuild) {
                         downloadDone = true;
-                        this.loadingProgressBar.hide();
+                        this.loadingProgressBar.hide(); // Hide progress bar on completion
                     } else {
-                        this.loadingProgressBar.setProgress(downloadedPercentage);
+                        this.loadingProgressBar.setProgress(downloadedPercentage); // Update progress bar
                     }
                 }
             }
@@ -12599,7 +12612,7 @@ class Viewer {
             this.splatRenderReady = false;
             return new Promise((resolve) => {
                 if (showLoadingUI) {
-                    splatProcessingTaskId = this.loadingSpinner.addTask('Processing splats...');
+                    splatProcessingTaskId = this.loadingSpinner.addTask('Processing sceen...');
                 }
                 delayedExecute(() => {
                     if (this.isDisposingOrDisposed()) {
